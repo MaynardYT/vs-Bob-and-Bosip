@@ -69,6 +69,10 @@ import Sys;
 import sys.FileSystem;
 #end
 
+#if mobileC
+import ui.Mobilecontrols;
+#end
+
 using StringTools;
 
 class PlayState extends MusicBeatState
@@ -335,6 +339,10 @@ class PlayState extends MusicBeatState
 	var resyncingVocals:Bool = true;
 
 	public static var obsIsOpen:Bool = false;
+
+	#if mobileC
+	var mcontrols:Mobilecontrols; 
+	#end
 
 	var camtween:FlxTween;
 
@@ -2353,6 +2361,30 @@ class PlayState extends MusicBeatState
 			songPosBar.cameras = [camHUD];
 		}
 		kadeEngineWatermark.cameras = [camHUD];
+
+		#if mobileC
+			mcontrols = new Mobilecontrols();
+			switch (mcontrols.mode)
+			{
+				case VIRTUALPAD_RIGHT | VIRTUALPAD_LEFT | VIRTUALPAD_CUSTOM:
+					controls.setVirtualPad(mcontrols._virtualPad, FULL, NONE);
+				case HITBOX:
+					controls.setHitBox(mcontrols._hitbox);
+				default:
+			}
+			trackedinputs = controls.trackedinputs;
+			controls.trackedinputs = [];
+
+			var camcontrol = new FlxCamera();
+			FlxG.cameras.add(camcontrol);
+			camcontrol.bgColor.alpha = 0;
+			mcontrols.cameras = [camcontrol];
+
+			mcontrols.visible = false;
+
+			add(mcontrols);
+		#end
+
 		if (loadRep)
 			replayTxt.cameras = [camHUD];
 
@@ -2598,6 +2630,10 @@ class PlayState extends MusicBeatState
 
 	function startCountdown():Void
 	{
+		#if mobileC
+		mcontrols.visible = true;
+		#end
+
 		inCutscene = false;
 
 		generateStaticArrows(0);
@@ -5652,6 +5688,10 @@ class PlayState extends MusicBeatState
 	
 	function endSong():Void
 	{
+		#if mobileC
+		mcontrols.visible = false;
+		#end
+
 		if (useVideo && !FlxG.save.data.lowDetail)
 		{
 			BackgroundVideo.get().stop();
