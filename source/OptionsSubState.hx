@@ -51,6 +51,7 @@ class OptionsSubState extends MusicBeatSubstate
 		]),
 		new OptionCategory("Gameplay", [
 			new DFJKOption(controls),
+			new CustomizeControls("Mobile Controls."),				
 			new DownscrollOption("Change the layout of the strumline."),
 			new GhostTapOption("Ghost Tapping is when you tap a direction and it doesn't give you a miss."),
 			new LowDetailOption('Optimizes the game to run on lower end computers!'),
